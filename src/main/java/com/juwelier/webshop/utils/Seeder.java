@@ -18,14 +18,16 @@ public class Seeder {
     private CustomerRepository customerRepository;
     private PasswordEncoder passwordEncoder;
     private OrderRepository orderRepository;
+    private CouponRepository couponRepository;
     private ProductPropertiesRepository productPropertiesRepository;
 
-    public Seeder(ProductRepository productRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, OrderRepository orderRepository, ProductPropertiesRepository productPropertiesRepository) {
+    public Seeder(ProductRepository productRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, OrderRepository orderRepository, CouponRepository couponRepository, ProductPropertiesRepository productPropertiesRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.orderRepository = orderRepository;
+        this.couponRepository = couponRepository;
         this.productPropertiesRepository = productPropertiesRepository;
     }
 
@@ -208,5 +210,12 @@ public class Seeder {
         );
         customer.setRole("ROLE_ADMIN");
         this.customerRepository.save(customer);
+
+        Coupon coupon = new Coupon(1, "test", "test", 1, 20, null, null, null, true);
+
+        this.couponRepository.save(coupon);
     }
+
+
+
 }
