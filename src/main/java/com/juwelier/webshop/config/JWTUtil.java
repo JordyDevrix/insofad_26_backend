@@ -9,8 +9,8 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class JWTUtil {
@@ -18,24 +18,30 @@ public class JWTUtil {
     private String secret;
 
 
-    public String generateToken(String email) throws IllegalArgumentException, JWTCreationException {
+    public String generateToken(String email, Set<String> roles) throws IllegalArgumentException, JWTCreationException {
 
         return JWT.create()
                 .withSubject("User Details")
                 .withClaim("email", email)
+                .withClaim("roles", roles.stream().collect(Collectors.joining(",")))
                 .withIssuedAt(new Date())
                 .withExpiresAt(this.createExpirationDate())
                 .withIssuer("Duck Studios")
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    public String validateTokenAndRetrieveSubject(String token) throws JWTVerificationException {
+    public Map<String, Object> validateTokenAndRetrieveClaims(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                 .withSubject("User Details")
                 .withIssuer("Duck Studios")
                 .build();
         DecodedJWT jwt = verifier.verify(token);
-        return jwt.getClaim("email").asString();
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", jwt.getClaim("email").asString());
+        claims.put("roles", jwt.getClaim("roles").asString());
+
+        return claims;
     }
 
     private Date createExpirationDate(){
@@ -44,6 +50,16 @@ public class JWTUtil {
         appendableDate.setTime(new Date());
         appendableDate.add(Calendar.HOUR, expirationHours);
         return appendableDate.getTime();
+    }
+
+    public Set<String> extractRoles(String token) throws JWTVerificationException {
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
+                .withSubject("User Details")
+                .withIssuer("Duck Studios")
+                .build();
+        DecodedJWT jwt = verifier.verify(token);
+        String rolesString = jwt.getClaim("roles").asString();
+        return Arrays.stream(rolesString.split(",")).collect(Collectors.toSet());
     }
 
 

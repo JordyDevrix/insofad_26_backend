@@ -8,8 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class Seeder {
@@ -20,8 +19,9 @@ public class Seeder {
     private OrderRepository orderRepository;
     private CouponRepository couponRepository;
     private ProductPropertiesRepository productPropertiesRepository;
+    private RoleRepository roleRepository;
 
-    public Seeder(ProductRepository productRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, OrderRepository orderRepository, CouponRepository couponRepository, ProductPropertiesRepository productPropertiesRepository) {
+    public Seeder(RoleRepository roleRepository, ProductRepository productRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, OrderRepository orderRepository, CouponRepository couponRepository, ProductPropertiesRepository productPropertiesRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
@@ -29,6 +29,7 @@ public class Seeder {
         this.orderRepository = orderRepository;
         this.couponRepository = couponRepository;
         this.productPropertiesRepository = productPropertiesRepository;
+        this.roleRepository = roleRepository;
     }
 
     @EventListener
@@ -199,22 +200,59 @@ public class Seeder {
         this.productPropertiesRepository.save(prop31);
         this.productPropertiesRepository.save(prop32);
 
+        Role adminRole = roleRepository.findByRoleName("ADMIN");
+        if (adminRole == null) {
+            adminRole = new Role("ADMIN");
+            roleRepository.save(adminRole);
+        }
+        Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
 
-
-        String encodedPassword = passwordEncoder.encode("Test123!");
-        Customer customer = new Customer(
-                "Bob",
-                "Webshop",
-                "bob@bobsluxuryenterprise.com",
-                encodedPassword
-        );
-        customer.setRole("ROLE_ADMIN");
-        this.customerRepository.save(customer);
+//        String encodedPassword = passwordEncoder.encode("Test123!");
+//        Customer customer = new Customer(
+//                "Bob",
+//                "Webshop",
+//                "bob@bobsluxuryenterprise.com",
+//                encodedPassword
+//        );
+//        customer.setRole("ROLE_ADMIN");
+//        this.customerRepository.save(customer);
 
         Coupon coupon = new Coupon(1, "test", "test", 1, 20, null, null, null, true);
 
         this.couponRepository.save(coupon);
     }
+
+    Role adminRole = roleRepository.findByRoleName("ADMIN");
+    if (adminRole == null) {
+        adminRole = new Role("ADMIN");
+        roleRepository.save(adminRole);
+    }
+    Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
+
+    String encodedPassword = passwordEncoder.encode("Test123!!");
+    Customer admin = new Customer(
+            "Bob",
+            "Webshop",
+            "admin@mail.com",
+            encodedPassword,
+            rolesAdmin
+    );
+
+    Role userRole = roleRepository.findByRoleName("USER");
+        if (userRole == null) {
+        userRole = new Role("USER");
+        roleRepository.save(userRole);
+    }
+    Set<Role> rolesUser = new HashSet<>(Collections.singletonList(userRole));
+    Customer user = new Customer(
+            "Bob",
+            "Webshop",
+            "mail@mail.com",
+            encodedPassword,
+            rolesUser
+    );
+        this.customerRepository.save(admin);
+        this.customerRepository.save(user);
 
 
 

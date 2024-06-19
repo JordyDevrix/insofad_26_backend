@@ -37,10 +37,13 @@ public class SecurityConfig {
                 .userDetailsService(customerService)
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/account/**").permitAll()
-                        .requestMatchers("/coupons/**").permitAll()
                         .requestMatchers("/error").anonymous()
+                        .requestMatchers("/error").anonymous()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();
