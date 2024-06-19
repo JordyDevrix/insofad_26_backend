@@ -207,30 +207,9 @@ public class Seeder {
         }
         Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
 
-//        String encodedPassword = passwordEncoder.encode("Test123!");
-//        Customer customer = new Customer(
-//                "Bob",
-//                "Webshop",
-//                "bob@bobsluxuryenterprise.com",
-//                encodedPassword
-//        );
-//        customer.setRole("ROLE_ADMIN");
-//        this.customerRepository.save(customer);
 
-        Coupon coupon = new Coupon(1, "test", "test", 1, 20, null, null, null, true);
-
-        this.couponRepository.save(coupon);
-    }
-
-    Role adminRole = roleRepository.findByRoleName("ADMIN");
-    if (adminRole == null) {
-        adminRole = new Role("ADMIN");
-        roleRepository.save(adminRole);
-    }
-    Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
-
-    String encodedPassword = passwordEncoder.encode("Test123!!");
-    Customer admin = new Customer(
+        String encodedPassword = passwordEncoder.encode("Test123!!");
+        Customer admin = new Customer(
             "Bob",
             "Webshop",
             "admin@mail.com",
@@ -255,5 +234,8 @@ public class Seeder {
         this.customerRepository.save(user);
 
 
+        Coupon coupon = new Coupon(1, "test", "test", 1, 20, null, null, null, true);
 
+        this.couponRepository.save(coupon);
+    }
 }

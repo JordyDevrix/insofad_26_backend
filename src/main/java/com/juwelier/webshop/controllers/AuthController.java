@@ -5,6 +5,7 @@ import com.juwelier.webshop.dao.CustomerRepository;
 import com.juwelier.webshop.dto.AuthenticationDTO;
 import com.juwelier.webshop.dto.LoginResponse;
 import com.juwelier.webshop.models.Customer;
+import com.juwelier.webshop.models.Role;
 import com.juwelier.webshop.services.CredentialValidator;
 import com.juwelier.webshop.services.CustomerService;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.juwelier.webshop.dao.CustomerDAO;
+import com.juwelier.webshop.dao.RoleRepository;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -99,7 +102,7 @@ public class AuthController {
             Customer customer = customerRepository.findByEmail(body.email);
             Set<String> roles = customer.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
 
-            String token = jwtUtil.generateToken(body.email);
+            String token = jwtUtil.generateToken(body.email, roles);
 
             LoginResponse loginResponse = new LoginResponse(customer.getEmail(), token);
 
