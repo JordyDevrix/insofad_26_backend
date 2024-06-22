@@ -234,8 +234,13 @@ public class Seeder {
         this.customerRepository.save(user);
 
 
-        Coupon coupon = new Coupon(1, "test", "test", 1, 20, null, null, null, true);
+        Coupon coupon1 = new Coupon(1, "SUMMER2024", "Celebrate summer with 20$ off any order!", 10, 20, null, null, "$", true);
+        this.couponRepository.save(coupon1);
 
-        this.couponRepository.save(coupon);
+        Coupon coupon2 = new Coupon(2, "FREEDELIVERY100", "Free delivery costs!", 10, 100, null, null, "$", true);
+        this.couponRepository.save(coupon2);
+
+        Coupon coupon3 = new Coupon(3, "HALFOFFSALE5", "Get half off ANY ORDER now!", 10, 50, null, null, "%", true);
+        this.couponRepository.save(coupon3);
     }
 }
