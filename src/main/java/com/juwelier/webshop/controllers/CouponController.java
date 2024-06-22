@@ -58,6 +58,12 @@ public class CouponController {
                 double discount = coupon.get().getPrice();
                 double newTotal = applyCouponRequest.totalPrice - discount;
 
+                if ("$".equals(coupon.get().getType())) {
+                    discount = coupon.get().getPrice();
+                } else if ("%".equals(coupon.get().getType())) {
+                    discount = applyCouponRequest.totalPrice * (coupon.get().getPrice() / 100);
+                }
+
                 System.out.println("Discount: " + discount);
                 System.out.println("New total after applying coupon: " + newTotal);
 
