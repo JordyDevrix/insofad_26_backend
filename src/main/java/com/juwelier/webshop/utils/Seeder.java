@@ -199,7 +199,7 @@ public class Seeder {
 
 
 
-        String encodedPassword = passwordEncoder.encode("Test123!");
+        String encodedPassword = passwordEncoder.encode("B0BA20P24I");
         Customer customer = new Customer(
                 "Bob",
                 "Webshop",
