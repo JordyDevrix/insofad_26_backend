@@ -200,9 +200,9 @@ public class Seeder {
         this.productPropertiesRepository.save(prop31);
         this.productPropertiesRepository.save(prop32);
 
-        Role adminRole = roleRepository.findByRoleName("ADMIN");
+        Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN");
         if (adminRole == null) {
-            adminRole = new Role("ADMIN");
+            adminRole = new Role("ROLE_ADMIN");
             roleRepository.save(adminRole);
         }
         Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
