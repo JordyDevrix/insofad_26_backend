@@ -200,9 +200,9 @@ public class Seeder {
         this.productPropertiesRepository.save(prop31);
         this.productPropertiesRepository.save(prop32);
 
-        Role adminRole = roleRepository.findByRoleName("ADMIN");
+        Role adminRole = roleRepository.findByRoleName("ROLE_ADMIN");
         if (adminRole == null) {
-            adminRole = new Role("ADMIN");
+            adminRole = new Role("ROLE_ADMIN");
             roleRepository.save(adminRole);
         }
         Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
@@ -215,7 +215,7 @@ public class Seeder {
                 "bob@bobsluxuryenterprise.com",
                 encodedPassword
         );
-        customer.setRole("ROLE_ADMIN");
+        customer.setRoles(rolesAdmin);
         this.customerRepository.save(customer);
 
         Coupon coupon1 = new Coupon(1, "SUMMER2024", "Celebrate summer with 20$ off any order!", 10, 20, null, null, "$", true);
