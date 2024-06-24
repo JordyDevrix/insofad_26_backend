@@ -8,8 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class Seeder {
@@ -20,8 +19,9 @@ public class Seeder {
     private OrderRepository orderRepository;
     private CouponRepository couponRepository;
     private ProductPropertiesRepository productPropertiesRepository;
+    private RoleRepository roleRepository;
 
-    public Seeder(ProductRepository productRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, OrderRepository orderRepository, CouponRepository couponRepository, ProductPropertiesRepository productPropertiesRepository) {
+    public Seeder(RoleRepository roleRepository, ProductRepository productRepository, CategoryRepository categoryRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, OrderRepository orderRepository, CouponRepository couponRepository, ProductPropertiesRepository productPropertiesRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
@@ -29,6 +29,7 @@ public class Seeder {
         this.orderRepository = orderRepository;
         this.couponRepository = couponRepository;
         this.productPropertiesRepository = productPropertiesRepository;
+        this.roleRepository = roleRepository;
     }
 
     @EventListener
@@ -199,6 +200,12 @@ public class Seeder {
         this.productPropertiesRepository.save(prop31);
         this.productPropertiesRepository.save(prop32);
 
+        Role adminRole = roleRepository.findByRoleName("ADMIN");
+        if (adminRole == null) {
+            adminRole = new Role("ADMIN");
+            roleRepository.save(adminRole);
+        }
+        Set<Role> rolesAdmin = new HashSet<>(Collections.singletonList(adminRole));
 
 
         String encodedPassword = passwordEncoder.encode("B0BA20P24I");
@@ -220,7 +227,4 @@ public class Seeder {
         Coupon coupon3 = new Coupon(3, "HALFOFFSALE5", "Get half off ANY ORDER now!", 10, 50, null, null, "%", true);
         this.couponRepository.save(coupon3);
     }
-
-
-
 }

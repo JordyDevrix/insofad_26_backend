@@ -5,6 +5,7 @@ import com.juwelier.webshop.dao.CustomerRepository;
 import com.juwelier.webshop.dto.AuthenticationDTO;
 import com.juwelier.webshop.dto.LoginResponse;
 import com.juwelier.webshop.models.Customer;
+import com.juwelier.webshop.models.Role;
 import com.juwelier.webshop.services.CredentialValidator;
 import com.juwelier.webshop.services.CustomerService;
 import jakarta.servlet.http.HttpSession;
@@ -18,23 +19,33 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.juwelier.webshop.dao.CustomerDAO;
+import com.juwelier.webshop.dao.RoleRepository;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200", "http://s1151166.student.inf-hsleiden.nl:11166"})
 @RequestMapping("/account")
 public class AuthController {
     private final CustomerRepository customerRepository;
+    private final RoleRepository roleDAO;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authManager;
     private final PasswordEncoder passwordEncoder;
     private CredentialValidator validator;
     private CustomerService customerService;
+    private final CustomerDAO customerDAO;
 
-    public AuthController(CustomerRepository customerRepository, JWTUtil jwtUtil, AuthenticationManager authManager, PasswordEncoder passwordEncoder, CredentialValidator validator, CustomerService customerService) {
+    public AuthController(CustomerRepository customerRepository, CustomerDAO customerDAO, RoleRepository roleDAO, JWTUtil jwtUtil, AuthenticationManager authManager, PasswordEncoder passwordEncoder, CredentialValidator validator, CustomerService customerService) {
         this.customerRepository = customerRepository;
+        this.customerDAO = customerDAO;
+        this.roleDAO = roleDAO;
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
         this.passwordEncoder = passwordEncoder;
@@ -65,14 +76,17 @@ public class AuthController {
         }
         String encodedPassword = passwordEncoder.encode(authenticationDTO.password);
 
-        Customer registerdCustomUser = new Customer(authenticationDTO.firstName,
-                authenticationDTO.lastName,
-                authenticationDTO.email,
-                encodedPassword
-        );
-        this.customerRepository.save(registerdCustomUser);
-        String token = jwtUtil.generateToken(registerdCustomUser.getEmail());
-        LoginResponse loginResponse = new LoginResponse(registerdCustomUser.getEmail(), token);
+        Role userRole = roleDAO.findByRoleName("USER");
+        if (userRole == null) {
+            userRole = new Role("USER");
+            roleDAO.save(userRole);
+        }
+        Set<Role> roles = new HashSet<>(Collections.singletonList(userRole));
+
+        Customer registeredCustomUser = new Customer(authenticationDTO.email, encodedPassword, roles);
+        customerRepository.save(registeredCustomUser);
+        String token = jwtUtil.generateToken(registeredCustomUser.getEmail(), registeredCustomUser.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet()));
+        LoginResponse loginResponse = new LoginResponse(registeredCustomUser.getEmail(), token);
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -85,9 +99,11 @@ public class AuthController {
 
             authManager.authenticate(authInputToken);
 
-            String token = jwtUtil.generateToken(body.email);
+            Customer customer = customerRepository.findByEmail(body.email);
+            Set<String> roles = customer.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
 
-            Customer customer = this.customerRepository.findByEmail(body.email);
+            String token = jwtUtil.generateToken(body.email, roles);
+
             LoginResponse loginResponse = new LoginResponse(customer.getEmail(), token);
 
 

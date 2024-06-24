@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
@@ -35,7 +36,12 @@ public class JWTFilter extends OncePerRequestFilter {
                 return;
             } else {
                 try {
-                    String email = jwtTokenUtil.validateTokenAndRetrieveSubject(jwt);
+//                    String email = jwtTokenUtil.validateTokenAndRetrieveSubject(jwt);
+                    Map<String, Object> claims = jwtTokenUtil.validateTokenAndRetrieveClaims(jwt);
+                    String email = (String) claims.get("email");
+                    String roles = (String) claims.get("roles");
+
+
                     UserDetails userDetails = customerService.loadUserByUsername(email);
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(email, userDetails.getPassword(), userDetails.getAuthorities());

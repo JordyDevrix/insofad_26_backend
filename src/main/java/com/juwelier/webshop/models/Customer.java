@@ -2,6 +2,8 @@ package com.juwelier.webshop.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "customer")
@@ -13,15 +15,36 @@ public class Customer {
     private String lastName;
     private String email;
     private String password;
-    private String role = "USER";
+//    private String role = "USER";
+    public Set<Role> getRoles() {
+    return roles;
+}
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public Customer() {}
 
-    public Customer(String firstName, String lastName, String email, String password) {
+    public Customer(String firstName, String lastName, String email, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.roles = roles;
+    }
+
+    public Customer(String email, String password, Set<Role> roles) {
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
     public UUID getId() {
@@ -64,11 +87,5 @@ public class Customer {
         this.password = password;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
 
-    public String getRole() {
-        return role;
-    }
 }
