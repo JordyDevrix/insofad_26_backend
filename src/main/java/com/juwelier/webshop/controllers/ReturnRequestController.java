@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/returns")
+@CrossOrigin(origins = {"http://localhost:80", "http://s1151166.student.inf-hsleiden.nl:11166"})
 public class ReturnRequestController {
 
     private final ReturnRequestService service;

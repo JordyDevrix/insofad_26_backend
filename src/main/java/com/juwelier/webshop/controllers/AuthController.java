@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://s1151166.student.inf-hsleiden.nl:11166"})
+@CrossOrigin(origins = {"http://localhost:80", "http://s1151166.student.inf-hsleiden.nl:11166"})
 @RequestMapping("/account")
 public class AuthController {
     private final CustomerRepository customerRepository;
