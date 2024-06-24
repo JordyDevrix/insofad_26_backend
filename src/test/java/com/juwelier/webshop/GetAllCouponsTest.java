@@ -32,28 +32,28 @@ class GetAllCouponsTest {
     private CouponDTO couponDTO;
     private Coupon coupon;
 
-//    @BeforeEach
-//    void setUp() {
-//        couponDTO = new CouponDTO();
-//        couponDTO.setTitle("Summer Sale");
-//        couponDTO.setMessage("Get 20% off on all items");
-//        couponDTO.setAmount(20);
-//        couponDTO.setPrice(100);
-//        couponDTO.setStartDate(new Date(2023 - 1900, 5, 1)); // June 1, 2023
-//        couponDTO.setEndDate(new Date(2023 - 1900, 5, 30)); // June 30, 2023
-//        couponDTO.setType("Percentage");
-//        couponDTO.setStatus(true);
-//
-//        coupon = new Coupon();
-//        coupon.setTitle("Summer Sale");
-//        coupon.setMessage("Get 20% off on all items");
-//        coupon.setAmount(20);
-//        coupon.setPrice(100);
-//        coupon.setStartDate(new Date(2023 - 1900, 5, 1)); // June 1, 2023
-//        coupon.setEndDate(new Date(2023 - 1900, 5, 30)); // June 30, 2023
-//        coupon.setType("Percentage");
-//        coupon.setStatus(true);
-//    }
+    @BeforeEach
+    void setUp() {
+        couponDTO = new CouponDTO();
+        couponDTO.setTitle("Summer Sale");
+        couponDTO.setMessage("Get 20% off on all items");
+        couponDTO.setAmount(20);
+        couponDTO.setPrice(100);
+        couponDTO.setStartDate(new Date(2023 - 1900, 5, 1)); // June 1, 2023
+        couponDTO.setEndDate(new Date(2023 - 1900, 5, 30)); // June 30, 2023
+        couponDTO.setType("Percentage");
+        couponDTO.setStatus(true);
+
+        coupon = new Coupon();
+        coupon.setTitle("Summer Sale");
+        coupon.setMessage("Get 20% off on all items");
+        coupon.setAmount(20);
+        coupon.setPrice(100);
+        coupon.setStartDate(new Date(2023 - 1900, 5, 1)); // June 1, 2023
+        coupon.setEndDate(new Date(2023 - 1900, 5, 30)); // June 30, 2023
+        coupon.setType("Percentage");
+        coupon.setStatus(true);
+    }
 
     @Test
     void getAllCoupons() {
