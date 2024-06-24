@@ -215,7 +215,7 @@ public class Seeder {
                 "bob@bobsluxuryenterprise.com",
                 encodedPassword
         );
-        customer.setRole("ROLE_ADMIN");
+        customer.setRoles(rolesAdmin);
         this.customerRepository.save(customer);
 
         Coupon coupon1 = new Coupon(1, "SUMMER2024", "Celebrate summer with 20$ off any order!", 10, 20, null, null, "$", true);
