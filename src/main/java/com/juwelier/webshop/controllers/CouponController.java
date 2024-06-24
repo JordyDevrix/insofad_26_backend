@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:80"})
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RequestMapping("/coupons")
 @Transactional
 public class CouponController {
